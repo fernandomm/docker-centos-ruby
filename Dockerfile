@@ -1,9 +1,17 @@
 FROM centos:7.4.1708
 
-RUN yum install which -y
+ENV RUBY_MAJOR 2.4
+ENV RUBY_VERSION 2.4.3
 
-RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-RUN curl -sSL https://get.rvm.io | bash -s stable
-RUN /bin/bash -l -c "rvm install 2.4.3"
-RUN /bin/bash -l -c "rvm rvmrc warning ignore allGemfiles"
-RUN /bin/bash -l -c "gem install bundler"
+RUN yum install which wget zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel -y
+
+RUN mkdir -p /usr/src/ruby
+WORKDIR /usr/src
+RUN wget -O ruby.tar.gz https://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.gz
+RUN tar -zxf ruby.tar.gz -C /usr/src/ruby --strip-components=1
+WORKDIR /usr/src/ruby
+RUN ./configure --disable-install-doc --enable-shared
+RUN make -j "$(nproc)"
+RUN make install
+
+RUN gem install bundler

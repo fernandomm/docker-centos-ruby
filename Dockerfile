@@ -1,7 +1,7 @@
 FROM centos:7.4.1708
 
-ENV RUBY_MAJOR 2.4
-ENV RUBY_VERSION 2.4.3
+ENV RUBY_MAJOR 2.5
+ENV RUBY_VERSION 2.5.3
 
 RUN yum install which wget zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel -y && \
 	yum clean all
